@@ -2,6 +2,8 @@ const $canvas = document.querySelector("canvas"),
   $toolBtns = document.querySelectorAll(".tool"),
   $fillColor = document.querySelector("#fill-color"),
   $sizeSlider = document.querySelector("#size-slider"),
+  $colorBtns = document.querySelectorAll(".colors .option"),
+  $colorPicker = document.querySelector("#color-picker"),
   $ctx = $canvas.getContext("2d");
 
 // global variables with default value
@@ -10,7 +12,8 @@ let prevMouseX,
   snapshot,
   isDrawing = false,
   selectedTool = "brush",
-  brushWidth = 5;
+  brushWidth = 5,
+  selectedColor = "#000";
 
 window.addEventListener("load", () => {
   $canvas.width = $canvas.offsetWidth;
@@ -60,6 +63,8 @@ const startDraw = (e) => {
   prevMouseY = e.offsetY; // passing current mouseY postion as prevMouseY value
   $ctx.beginPath(); //cut the path
   $ctx.lineWidth = brushWidth; //passing brushSize as line width
+  $ctx.strokeStyle = selectedColor; // passing selectedColor as stroke style
+  $ctx.fillStyle = selectedColor; // passing selectedColor as fill style
   // copying canvas data and passing as snapshot value.. this avoids dragging the image
   snapshot = $ctx.getImageData(0, 0, $canvas.width, $canvas.height);
 };
@@ -92,6 +97,24 @@ $toolBtns.forEach((btn) => {
 });
 
 $sizeSlider.addEventListener("change", () => (brushWidth = $sizeSlider.value)); // passing slider value as brushSize
+
+$colorBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // removing active class from the previous option and adding on current clicked option
+    document.querySelector(".options .selected").classList.remove("selected");
+    btn.classList.add("selected");
+    // passing selected btn background color as selectedColor value
+    selectedColor = window
+      .getComputedStyle(btn)
+      .getPropertyValue("background-color");
+  });
+});
+
+$colorPicker.addEventListener("change", () => {
+  // passing picked color value from color picker to last color btn background
+  $colorPicker.parentElement.style.background = $colorPicker.value;
+  $colorPicker.parentElement.click();
+});
 
 $canvas.addEventListener("mousedown", startDraw);
 $canvas.addEventListener("mousemove", drawing);
