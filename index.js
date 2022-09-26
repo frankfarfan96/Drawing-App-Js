@@ -33,6 +33,16 @@ const drawRect = (e) => {
   );
 };
 
+const drawCircle = (e) => {
+  $ctx.beginPath(); //creating new path to draw cirlce
+  // getting radius for circle according to the mouse pointer
+  let radius = Math.sqrt(
+    Math.pow(prevMouseX - e.offsetX, 2) + Math.pow(prevMouseY - e.offsetY, 2)
+  );
+  $ctx.arc(prevMouseX, prevMouseY, radius, 0, 2 * Math.PI); // creating circle according to the mouse pointer
+  $fillColor.checked ? $ctx.fill() : $ctx.stroke(); // if fillColor is checked fill circle else draw border circle
+};
+
 const startDraw = (e) => {
   isDrawing = true;
   prevMouseX = e.offsetX; // passing current mouseX postion as prevMouseX value
@@ -52,6 +62,8 @@ const drawing = (e) => {
     $ctx.stroke(); // drawing/filing line with color
   } else if (selectedTool === "rectangle") {
     drawRect(e);
+  } else if (selectedTool === "circle") {
+    drawCircle(e);
   }
 };
 
