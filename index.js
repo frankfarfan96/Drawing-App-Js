@@ -43,6 +43,16 @@ const drawCircle = (e) => {
   $fillColor.checked ? $ctx.fill() : $ctx.stroke(); // if fillColor is checked fill circle else draw border circle
 };
 
+const drawTriangle = (e) => {
+  $ctx.beginPath(); //creating new path to draw triangle
+  $ctx.moveTo(prevMouseX, prevMouseY); // moving triangle to the mosue pointer
+  $ctx.lineTo(e.offsetX, e.offsetY); // creating first line according to the mouse pointer
+  $ctx.lineTo(prevMouseX * 2 - e.offsetX, e.offsetY); // creating bottom line of triangle
+  $ctx.closePath(); // closing path of a triangle so the third line draw automatically
+  $ctx.stroke();
+  $fillColor.checked ? $ctx.fill() : $ctx.stroke(); // if fillColor is checked fill triangle else draw border triangle
+};
+
 const startDraw = (e) => {
   isDrawing = true;
   prevMouseX = e.offsetX; // passing current mouseX postion as prevMouseX value
@@ -64,6 +74,8 @@ const drawing = (e) => {
     drawRect(e);
   } else if (selectedTool === "circle") {
     drawCircle(e);
+  } else {
+    drawTriangle(e);
   }
 };
 
