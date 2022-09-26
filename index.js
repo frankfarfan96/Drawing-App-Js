@@ -1,11 +1,12 @@
 const $canvas = document.querySelector("canvas"),
-  $toolBtns = document.querySelectorAll(".tool");
-$ctx = $canvas.getContext("2d");
+  $toolBtns = document.querySelectorAll(".tool"),
+  $fillColor = document.querySelector("#fill-color"),
+  $ctx = $canvas.getContext("2d");
 
 // global variables with default value
 let prevMouseX,
   prevMouseY,
-  snapShot,
+  snapshot,
   isDrawing = false,
   selectedTool = "brush",
   brushWidth = 5;
@@ -16,7 +17,15 @@ window.addEventListener("load", () => {
 });
 
 const drawRect = (e) => {
-  $ctx.strokeRect(
+  if (!$fillColor.checked) {
+    return $ctx.strokeRect(
+      e.offsetX,
+      e.offsetY,
+      prevMouseX - e.offsetX,
+      prevMouseY - e.offsetY
+    );
+  }
+  $ctx.fillRect(
     e.offsetX,
     e.offsetY,
     prevMouseX - e.offsetX,
