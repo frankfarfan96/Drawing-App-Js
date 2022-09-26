@@ -1,6 +1,7 @@
 const $canvas = document.querySelector("canvas"),
   $toolBtns = document.querySelectorAll(".tool"),
   $fillColor = document.querySelector("#fill-color"),
+  $sizeSlider = document.querySelector("#size-slider"),
   $ctx = $canvas.getContext("2d");
 
 // global variables with default value
@@ -89,6 +90,8 @@ $toolBtns.forEach((btn) => {
     console.log(selectedTool);
   });
 });
+
+$sizeSlider.addEventListener("change", () => (brushWidth = $sizeSlider.value)); // passing slider value as brushSize
 
 $canvas.addEventListener("mousedown", startDraw);
 $canvas.addEventListener("mousemove", drawing);
