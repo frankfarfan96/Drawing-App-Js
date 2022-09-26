@@ -4,6 +4,7 @@ const $canvas = document.querySelector("canvas"),
   $sizeSlider = document.querySelector("#size-slider"),
   $colorBtns = document.querySelectorAll(".colors .option"),
   $colorPicker = document.querySelector("#color-picker"),
+  $clearCanvas = document.querySelector(".clear-canvas"),
   $ctx = $canvas.getContext("2d");
 
 // global variables with default value
@@ -73,7 +74,10 @@ const drawing = (e) => {
   if (!isDrawing) return; //if isDrawing is false return from here
   $ctx.putImageData(snapshot, 0, 0); // adding copied canvas data on to this canvas
 
-  if (selectedTool === "brush") {
+  if (selectedTool === "brush" || selectedTool === "eraser") {
+    //if selected tool is ereaser ther set strokeStyle to white
+    // to paint whit color on to the existing canvas content else set the stroke color to selected color
+    $ctx.strokeStyle = selectedTool === "eraser" ? "#fff" : selectedColor;
     $ctx.lineTo(e.offsetX, e.offsetY); //creating line according to the mouse pointer
     $ctx.stroke(); // drawing/filing line with color
   } else if (selectedTool === "rectangle") {
@@ -114,6 +118,12 @@ $colorPicker.addEventListener("change", () => {
   // passing picked color value from color picker to last color btn background
   $colorPicker.parentElement.style.background = $colorPicker.value;
   $colorPicker.parentElement.click();
+});
+
+$clearCanvas.addEventListener("click", () => {
+  confirm("Are you sure?")
+    ? $ctx.clearRect(0, 0, $canvas.width, $canvas.height)
+    : false; // clearing whole canvas
 });
 
 $canvas.addEventListener("mousedown", startDraw);
