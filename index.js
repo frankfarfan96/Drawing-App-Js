@@ -5,6 +5,7 @@ const $canvas = document.querySelector("canvas"),
   $colorBtns = document.querySelectorAll(".colors .option"),
   $colorPicker = document.querySelector("#color-picker"),
   $clearCanvas = document.querySelector(".clear-canvas"),
+  $saveImg = document.querySelector(".save-img"),
   $ctx = $canvas.getContext("2d");
 
 // global variables with default value
@@ -16,10 +17,24 @@ let prevMouseX,
   brushWidth = 5,
   selectedColor = "#000";
 
+const setCanvasBackground = () => {
+  $ctx.fillStyle = "#fff";
+  $ctx.fillRect(0, 0, $canvas.width, $canvas.height);
+  $ctx.fillStyle = selectedColor;
+};
+
 window.addEventListener("load", () => {
   $canvas.width = $canvas.offsetWidth;
   $canvas.height = $canvas.offsetHeight;
+  setCanvasBackground();
 });
+
+const drawLine = (e) => {
+  $ctx.beginPath(); //creating new path to draw triangle
+  $ctx.moveTo(prevMouseX, prevMouseY); // moving triangle to the mosue pointer
+  $ctx.lineTo(e.offsetX, e.offsetY); // creating line
+  $ctx.stroke();
+};
 
 const drawRect = (e) => {
   if (!$fillColor.checked) {
@@ -80,6 +95,8 @@ const drawing = (e) => {
     $ctx.strokeStyle = selectedTool === "eraser" ? "#fff" : selectedColor;
     $ctx.lineTo(e.offsetX, e.offsetY); //creating line according to the mouse pointer
     $ctx.stroke(); // drawing/filing line with color
+  } else if (selectedTool === "line") {
+    drawLine(e);
   } else if (selectedTool === "rectangle") {
     drawRect(e);
   } else if (selectedTool === "circle") {
@@ -124,6 +141,14 @@ $clearCanvas.addEventListener("click", () => {
   confirm("Are you sure?")
     ? $ctx.clearRect(0, 0, $canvas.width, $canvas.height)
     : false; // clearing whole canvas
+  setCanvasBackground();
+});
+
+$saveImg.addEventListener("click", () => {
+  const $link = document.createElement("a");
+  $link.download = `${Date.now()}.jpg`; // passing current date as link dwonload value
+  $link.href = $canvas.toDataURL(); // passing canvasData as link href value
+  $link.click(); // clicking link to download image
 });
 
 $canvas.addEventListener("mousedown", startDraw);
